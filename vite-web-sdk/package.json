@@ -1,0 +1,9 @@
+{
+    "name": "vite-web-sdk",
+    "type": "module",
+    "version": "1.0.0",
+    "license": "MIT",
+    "exports": {
+        "./plugins": "./plugins.mjs"
+    }
+}

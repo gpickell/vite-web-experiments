@@ -1,0 +1,29 @@
+{
+    "name": "vertigis-studio-web-project",
+    "type": "module",
+    "private": true,
+    "version": "1.0.0",
+    "description": "",
+    "license": "UNLICENSED",
+    "author": "",
+    "scripts": {
+        "dev": "vite"
+    },
+    "devDependencies": {
+        "@arcgis/core": "4.24.7",
+        "@types/react": "18.0.25",
+        "@types/react-dom": "18.0.9",
+        "@types/react-window": "1.8.5",
+        "@vertigis/arcgis-extensions": "37.2.1",
+        "@vertigis/react-ui": "11.11.0",
+        "@vertigis/viewer-spec": "50.8.1",
+        "@vertigis/web": "^5.21.0",
+        "@vitejs/plugin-react": "^3.1.0",
+        "react": "18.2.0",
+        "react-dom": "18.2.0",
+        "typescript": "^4.9.5",
+        "vite": "^4.1.1",
+        "vite-web-sdk": "link:../vite-web-sdk"
+    },
+    "packageManager": "yarn@3.4.1"
+}
