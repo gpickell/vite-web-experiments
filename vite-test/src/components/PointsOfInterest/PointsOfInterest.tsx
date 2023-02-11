@@ -20,7 +20,7 @@ const PointsOfInterest: FC<LayoutElementProperties<PointsOfInterestModel>> = (
     useWatchCollectionAndRerender(model.pointsOfInterest);
     return (
         <LayoutElement {...props} stretch className="PointsOfInterest">
-            <Typography variant="h2">Points of Interest 123</Typography>
+            <Typography variant="h2">Points of Interest</Typography>
             <MenuList>
                 {model.pointsOfInterest.toArray().map((poi) => (
                     <PointOfInterest
@@ -45,35 +45,4 @@ const PointsOfInterest: FC<LayoutElementProperties<PointsOfInterestModel>> = (
     );
 };
 
-// This is an experiment, the react plugin in vite should be doing this.
-function hotify<P>(Visual: FC<P>): FC<P> {
-    const hot = import.meta.hot;
-    if (!hot) {
-        return Visual;
-    }
-
-    if (hot.data.Wrapper) {
-        hot.data.Visual = Visual;
-        return hot.data.Wrapper;
-    }
-
-    const Wrapper = (props: P) => {
-        const [NextVisual, setNextVisual] = useState(() => hot.data.Visual);
-        useEffect(() => {
-            const cb = () => setNextVisual(() => hot.data.Visual);
-            hot.accept(cb);
-            cb();
-
-            return () => hot.dispose(cb);
-        }, []);
-
-        return <NextVisual {...props} />;
-    };
-
-    hot.data.Visual = Visual;
-    hot.data.Wrapper = Wrapper;
-    
-    return Wrapper;
-}
-
-export default hotify(PointsOfInterest);
+export default PointsOfInterest;
