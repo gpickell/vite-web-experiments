@@ -5,7 +5,7 @@ import {
 import { useWatchCollectionAndRerender } from "@vertigis/web/ui";
 import MenuList from "@vertigis/web/ui/MenuList";
 import Typography from "@vertigis/web/ui/Typography";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 
 import PointsOfInterestModel from "./PointsOfInterestModel";
 import PointOfInterest from "./PointOfInterest";

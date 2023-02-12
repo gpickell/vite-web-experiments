@@ -35,6 +35,10 @@ function plugins() {
                 if (isExternal(id)) {
                     return id;
                 }
+
+                if (id === "@start") {
+                    return fileURLToPath(new URL("start.mjs", import.meta.url));
+                }
             }
         },
 

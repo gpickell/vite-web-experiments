@@ -4,14 +4,7 @@ import PointsOfInterest, {
 
 import { LibraryRegistry } from "@vertigis/web/config";
 
-import hot from "vite-web-sdk/hot";
-
 const LAYOUT_NAMESPACE = "custom.3432813e";
-
-if (import.meta.hot) {
-    import.meta.hot.accept();
-    hot({ PointsOfInterest });
-}
 
 export default function (registry: LibraryRegistry): void {
     registry.registerComponent({
@@ -20,7 +13,7 @@ export default function (registry: LibraryRegistry): void {
         iconId: "station-locator",
         name: "points-of-interest",
         namespace: LAYOUT_NAMESPACE,
-        getComponentType: () => hot(PointsOfInterest),
+        getComponentType: () => PointsOfInterest,
         itemType: "points-of-interest-model",
         title: "Points of Interest",
     });

@@ -10,77 +10,7 @@
   <body role="application">
     <div id="gcx-app"></div>
     <script type="module">
-        function getAbsoluteUrl(value) {
-            const url = new URL(value, location.href);
-            return url.toString();
-        }
-
-        async function getAppConfig() {
-            const res = await fetch(getAbsoluteUrl("app.json"));
-            return await res.json();
-        }
-
-        async function hoistViewer() {
-            const res = await fetch("viewer/index.html");
-            const parser = new DOMParser();
-            const html = parser.parseFromString(await res.text(), "text/html");
-            for (const node of [...html.head.children]) {
-                if (node.tagName === "SCRIPT") {
-                    const script = document.createElement("script");
-                    const src = node.getAttribute("src");
-                    src && script.setAttribute("src", src);
-                    script.innerHTML = node.innerHTML;
-                    document.head.append(script);
-
-                    if (src) {
-                        await new Promise(x => script.addEventListener("load", x));
-                    }
-                }
-
-                if (node.tagName === "STYLE") {
-                    document.head.append(document.adoptNode(node));
-                }
-            }
-
-            window.__import = (name) => {
-                return new Promise((resolve, reject) => {
-                    const hoist = value => {
-                        if (!value.__esModule) {
-                            const result = Object.create(value);
-                            result.__esModule = true;
-
-                            if (!("default" in value)) {
-                                result.default = value;
-                            }
-                            
-                            value = result;
-                        }
-
-                        resolve(value);
-                    };
-
-                    require([name], hoist, reject);
-                });        
-            };
-
-            const appConfig = await getAppConfig();
-            const startup = await Promise.all([
-                import("web"),
-                import("@vertigis/web-libraries!/common"),
-                import("@vertigis/web-libraries!/web"),
-            ]);
-
-            const webViewer = startup.shift();
-            startup.push(await import("/src/index.ts"));
-
-            webViewer.bootstrap({
-                appConfig,
-                layout: getAbsoluteUrl("layout.xml"),
-                libraries: startup.map(lib => lib.default),
-            });
-        }
-
-        hoistViewer();        
+        import "@start";
     </script>
   </body>
 </html>
