@@ -36,10 +36,48 @@ function plugins() {
                     return id;
                 }
 
-                if (id === "@start") {
-                    return fileURLToPath(new URL("start.mjs", import.meta.url));
+                if (id === "/start.mjs") {
+                    return id;
+                }
+            },
+
+            async load(id) {
+                if (id === "/start.mjs") {
+                    const path = fileURLToPath(new URL("start.mjs", import.meta.url));
+                    return await readFile(path, "utf-8");
                 }
             }
+        },
+
+        {
+            name: "vite-web-sdk-build",
+            enforce: "pre",
+            apply: "build",
+
+            config(config) {
+                config.publicDir = "app";
+
+                const build = config.build || {};
+                config.build = build;
+
+                const rollupOptions = build.rollupOptions || {};
+                build.rollupOptions = rollupOptions;
+
+                rollupOptions.input = "src/index.ts";
+                rollupOptions.output = {
+                    format: "amd",
+                    dir: "dist",
+                    entryFileNames: "main.js",
+                    chunkFileNames: "main-[hash].js",
+                    assetFileNames: "main-[hash].[ext]",    
+                };
+            },
+    
+            resolveId(id, importer) {
+                if (isExternal(id)) {
+                    return { id, external: true };
+                }
+            },
         },
 
         {
