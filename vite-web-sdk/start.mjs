@@ -120,5 +120,5 @@ if (import.meta.hot) {
         import.meta.hot.data.promise = start();    
     }
 } else {
-    hoistViewer();
+    start();
 }
