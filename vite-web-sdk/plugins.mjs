@@ -10,6 +10,8 @@ const externals = [
     "web",
 ];
 
+const sdkPrefix = "/@sdk/";
+
 function isExternal(id) {
     for (const ext of externals) {
         if (ext.endsWith("/")) {
@@ -36,14 +38,15 @@ function plugins() {
                     return id;
                 }
 
-                if (id === "/start.mjs") {
+                if (id.startsWith(sdkPrefix)) {
                     return id;
                 }
             },
 
             async load(id) {
-                if (id === "/start.mjs") {
-                    const path = fileURLToPath(new URL("start.mjs", import.meta.url));
+                if (id.startsWith(sdkPrefix)) {
+                    const suffix = id.substring(sdkPrefix.length);
+                    const path = fileURLToPath(new URL(suffix + ".mjs", import.meta.url));
                     return await readFile(path, "utf-8");
                 }
             }
