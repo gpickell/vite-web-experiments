@@ -8,9 +8,10 @@ This is an experiment to see if we can use Vite as a dev/build experience.
 - Selectively, reparse imports into hoisted AMD counterparts
 - Vite plugin to do all the magic
 - HMR Support
+- Added Emotion Support
 
 ## TODO:
-- Make prod build (should be easy with vite or pure rollup)
+- Make prod build (could be working ???)
 
 Startup:
 ```

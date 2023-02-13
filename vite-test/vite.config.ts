@@ -4,6 +4,6 @@ import plugins from "vite-web-sdk/plugins";
 
 export default defineConfig({
     plugins: [
-        plugins(),
+        plugins.withEmotion()
     ],
 })

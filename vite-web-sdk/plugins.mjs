@@ -32,8 +32,8 @@ function plugins() {
             name: "vite-web-sdk-dev-resolver",
             enforce: "pre",
             apply: "serve",
-    
-            resolveId(id, importer) {
+   
+            resolveId(id) {
                 if (isExternal(id)) {
                     return id;
                 }
@@ -244,4 +244,30 @@ function plugins() {
     ];
 }
 
+function withEmotion() {
+    return [
+        ...plugins(),
+
+        {
+            name: "vite-web-sdk-with-emotion",
+            apply: "serve",
+
+            config(config) {
+                const optimizeDeps = config.optimizeDeps || {};
+                config.optimizeDeps = optimizeDeps;
+
+                const include = optimizeDeps.include || [];
+                optimizeDeps.include = include;
+
+                const exclude = optimizeDeps.exclude || [];
+                optimizeDeps.exclude = exclude;
+
+                include.push("react/jsx-runtime", "@emotion/react", "@emotion/react/jsx-runtime");
+                exclude.push("react");
+            }
+        }
+    ];
+}
+
+Object.assign(plugins, { withEmotion });
 export default plugins;

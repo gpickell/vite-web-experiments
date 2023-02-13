@@ -9,7 +9,13 @@ import { FC } from "react";
 
 import PointsOfInterestModel from "./PointsOfInterestModel";
 import PointOfInterest from "./PointOfInterest";
-import "./PointsOfInterest.css";
+
+import { css } from "@emotion/react";
+
+const style = css`
+    background-color: var(--primaryBackground);
+    padding: 1rem;
+`;
 
 const PointsOfInterest: FC<LayoutElementProperties<PointsOfInterestModel>> = (
     props
@@ -19,7 +25,7 @@ const PointsOfInterest: FC<LayoutElementProperties<PointsOfInterestModel>> = (
     // collection.
     useWatchCollectionAndRerender(model.pointsOfInterest);
     return (
-        <LayoutElement {...props} stretch className="PointsOfInterest">
+        <LayoutElement css={style} {...props} stretch className="PointsOfInterest">
             <Typography variant="h2">Points of Interest</Typography>
             <MenuList>
                 {model.pointsOfInterest.toArray().map((poi) => (

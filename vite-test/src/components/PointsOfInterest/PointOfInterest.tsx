@@ -9,7 +9,15 @@ import MenuItemSecondaryAction from "@vertigis/web/ui/MenuItemSecondaryAction";
 import { FC } from "react";
 
 import PointOfInterestModel from "./PointOfInterestModel";
-import "./PointOfInterest.css";
+
+import { css } from "@emotion/react";
+
+const style = css`
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    margin-right: 16px;
+`;
 
 function formatLatLon(n: number): string {
     // formatNumber() respects locale and the app's configured region settings.
@@ -34,7 +42,7 @@ const PointOfInterest: FC<PointOfInterestProps> = ({
     useWatchAndRerender(model, ["title", "geometry.x", "geometry.y", "color"]);
     const [lon, lat] = xyToLngLat(geometry.x, geometry.y);
     return (
-        <MenuItem {...other}>
+        <MenuItem css={style} {...other}>
             <div
                 className="PointOfInterest-swatch"
                 style={{ backgroundColor: color.toCss() }}
