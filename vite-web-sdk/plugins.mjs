@@ -10,6 +10,7 @@ const externals = [
     "web",
 ];
 
+const proxyPrefix = "/@proxy/";
 const sdkPrefix = "/@sdk/";
 
 function isExternal(id) {
@@ -24,6 +25,19 @@ function isExternal(id) {
             }
         }
     }
+}
+
+function findDefault(star) {
+    // This is only suitable for the prod build when
+    // targetting AMD. In Vite, import x from "y"
+    // will always be the bare AMD-import. We actually
+    // don't want this because ESRI still sometimes makes
+    // the bare import explicit ( module.exports = func ).
+    if (star.__esModule || "default" in star) {
+        return star.default;
+    }
+
+    return star;    
 }
 
 function plugins() {
@@ -77,10 +91,42 @@ function plugins() {
             },
     
             resolveId(id, importer) {
-                if (isExternal(id)) {
+                if (id.startsWith(sdkPrefix)) {
+                    return id;
+                }
+
+                if (importer && importer.startsWith(proxyPrefix)) {
+                    const id = importer.substring(proxyPrefix.length);
                     return { id, external: true };
                 }
+
+                if (isExternal(id)) {
+                    return proxyPrefix + id;
+                }
             },
+
+            load(id) {
+                if (id === sdkPrefix + "find-default") {
+                    const code = [
+                        findDefault.toString(),
+                        `export default ${findDefault.name};`
+                    ];
+
+                    return code.join("\n");
+                }
+
+                if (id.startsWith(proxyPrefix)) {
+                    // Vite will closure optimize this, don't worry.
+                    const code = [                        
+                        `export * from "/@external";`,
+                        `import star from "/@external";`,
+                        `import helper from "/@sdk/find-default";`,
+                        `export default helper(star);`,
+                    ];
+
+                    return code.join("\n");
+                }
+            }
         },
 
         {

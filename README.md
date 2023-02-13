@@ -11,7 +11,7 @@ This is an experiment to see if we can use Vite as a dev/build experience.
 - Added Emotion Support
 
 ## TODO:
-- Make prod build (could be working ???)
+- Make prod build ( should actually be working now ??? )
 
 Startup:
 ```
