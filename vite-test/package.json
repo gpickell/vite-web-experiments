@@ -12,10 +12,8 @@
     },
     "devDependencies": {
         "@arcgis/core": "4.24.7",
-        "@emotion/react": "^11.10.5",
+        "@mui/material": "^5.11.9",
         "@types/react": "18.0.25",
-        "@types/react-dom": "18.0.9",
-        "@types/react-window": "1.8.5",
         "@vertigis/arcgis-extensions": "37.2.1",
         "@vertigis/react-ui": "11.11.0",
         "@vertigis/viewer-spec": "50.8.1",

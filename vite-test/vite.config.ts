@@ -8,6 +8,6 @@ export default defineConfig({
     },
 
     plugins: [
-        plugins.withEmotion(),
+        plugins(),
     ],
 })

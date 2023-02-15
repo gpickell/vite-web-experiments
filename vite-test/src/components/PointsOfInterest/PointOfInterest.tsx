@@ -1,23 +1,18 @@
 import { xyToLngLat } from "@arcgis/core/geometry/support/webMercatorUtils";
 import { format as formatNumber } from "@vertigis/arcgis-extensions/utilities/number";
-import { useWatchAndRerender } from "@vertigis/web/ui";
+import { styled, useWatchAndRerender } from "@vertigis/web/ui";
 import DynamicIcon from "@vertigis/web/ui/DynamicIcon";
 import IconButton from "@vertigis/web/ui/IconButton";
 import ListItemText from "@vertigis/web/ui/ListItemText";
 import MenuItem, { MenuItemProps } from "@vertigis/web/ui/MenuItem";
 import MenuItemSecondaryAction from "@vertigis/web/ui/MenuItemSecondaryAction";
-import { FC } from "react";
+import React, { FC } from "react";
 
 import PointOfInterestModel from "./PointOfInterestModel";
 
-import { css } from "@emotion/react";
-
-const style = css`
-    height: 20px;
-    width: 20px;
-    border-radius: 50%;
-    margin-right: 16px;
-`;
+const MenuItemStyled = styled(MenuItem)(() => ({
+    marginTop: "1rem"
+}));
 
 function formatLatLon(n: number): string {
     // formatNumber() respects locale and the app's configured region settings.
@@ -42,7 +37,7 @@ const PointOfInterest: FC<PointOfInterestProps> = ({
     useWatchAndRerender(model, ["title", "geometry.x", "geometry.y", "color"]);
     const [lon, lat] = xyToLngLat(geometry.x, geometry.y);
     return (
-        <MenuItem css={style} {...other}>
+        <MenuItemStyled {...other}>
             <div
                 className="PointOfInterest-swatch"
                 style={{ backgroundColor: color.toCss() }}
@@ -58,7 +53,7 @@ const PointOfInterest: FC<PointOfInterestProps> = ({
                     <DynamicIcon src="trash" />
                 </IconButton>
             </MenuItemSecondaryAction>
-        </MenuItem>
+        </MenuItemStyled>
     );
 };
 

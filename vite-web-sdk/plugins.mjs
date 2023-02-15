@@ -225,6 +225,18 @@ function plugins() {
                         changeOrigin: true,
                     }
                 };
+
+                const optimizeDeps = config.optimizeDeps || {};
+                config.optimizeDeps = optimizeDeps;
+
+                const include = optimizeDeps.include || [];
+                optimizeDeps.include = include;
+
+                const exclude = optimizeDeps.exclude || [];
+                optimizeDeps.exclude = exclude;
+
+                include.push("react/jsx-runtime");
+                exclude.push("react");                
             },
 
             configureServer(server) {
@@ -248,30 +260,4 @@ function plugins() {
     ];
 }
 
-function withEmotion() {
-    return [
-        ...plugins(),
-
-        {
-            name: "vite-web-sdk-with-emotion",
-            apply: "serve",
-
-            config(config) {
-                const optimizeDeps = config.optimizeDeps || {};
-                config.optimizeDeps = optimizeDeps;
-
-                const include = optimizeDeps.include || [];
-                optimizeDeps.include = include;
-
-                const exclude = optimizeDeps.exclude || [];
-                optimizeDeps.exclude = exclude;
-
-                include.push("react/jsx-runtime", "@emotion/react", "@emotion/react/jsx-runtime");
-                exclude.push("react");
-            }
-        }
-    ];
-}
-
-Object.assign(plugins, { withEmotion });
 export default plugins;

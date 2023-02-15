@@ -2,7 +2,7 @@ import {
     LayoutElement,
     LayoutElementProperties,
 } from "@vertigis/web/components";
-import { useWatchCollectionAndRerender } from "@vertigis/web/ui";
+import { styled, useWatchCollectionAndRerender } from "@vertigis/web/ui";
 import MenuList from "@vertigis/web/ui/MenuList";
 import Typography from "@vertigis/web/ui/Typography";
 import { FC } from "react";
@@ -10,12 +10,10 @@ import { FC } from "react";
 import PointsOfInterestModel from "./PointsOfInterestModel";
 import PointOfInterest from "./PointOfInterest";
 
-import { css } from "@emotion/react";
-
-const style = css`
-    background-color: var(--primaryBackground);
-    padding: 1rem;
-`;
+const LayoutElementStyled = styled(LayoutElement)(() => ({
+    backgroundColor: "var(--primaryBackground)",
+    padding: "1rem"
+}));
 
 const PointsOfInterest: FC<LayoutElementProperties<PointsOfInterestModel>> = (
     props
@@ -25,7 +23,7 @@ const PointsOfInterest: FC<LayoutElementProperties<PointsOfInterestModel>> = (
     // collection.
     useWatchCollectionAndRerender(model.pointsOfInterest);
     return (
-        <LayoutElement css={style} {...props} stretch className="PointsOfInterest">
+        <LayoutElementStyled {...props} stretch className="PointsOfInterest">
             <Typography variant="h2">Points of Interest</Typography>
             <MenuList>
                 {model.pointsOfInterest.toArray().map((poi) => (
@@ -47,7 +45,7 @@ const PointsOfInterest: FC<LayoutElementProperties<PointsOfInterestModel>> = (
                     />
                 ))}
             </MenuList>
-        </LayoutElement>
+        </LayoutElementStyled>
     );
 };
 
