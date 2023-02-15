@@ -40,21 +40,30 @@ async function hoistViewer() {
         document.head.append(await script);
     }
 
+    // Taken from rollup 
+    function _interopNamespaceCompat(e2) {
+        if (e2 && typeof e2 === "object" && "default" in e2)
+          return e2;
+        const n2 = Object.create(null, { [Symbol.toStringTag]: { value: "Module" } });
+        if (e2) {
+          for (const k2 in e2) {
+            n2[k2] = e2[k2];
+          }
+        }
+        n2.default = e2;
+        return n2;
+    }
+
+    const cache = Object.create(null);
     window.__import = (name) => {
         return new Promise((resolve, reject) => {
             const hoist = value => {
-                if (!value.__esModule) {
-                    const result = Object.create(value);
-                    result.__esModule = true;
-
-                    if (!("default" in value)) {
-                        result.default = value;
-                    }
-                    
-                    value = result;
+                let result = cache[name];
+                if (!result) {
+                    result = cache[name] = _interopNamespaceCompat(value);
                 }
 
-                resolve(value);
+                resolve(result);
             };
 
             require([name], hoist, reject);
