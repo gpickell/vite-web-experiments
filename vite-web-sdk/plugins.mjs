@@ -205,23 +205,29 @@ function plugins() {
                 const server = config.server || {};
                 config.server = server;
                 
+                const viewerUrl = new URL(process.env.VIEWER_URL || "https://apps.vertigisstudio.com/web");
+                viewerUrl.hash = "";
+                viewerUrl.search = "";
+                viewerUrl.pathname = `${viewerUrl.pathname}/`.replace(/\/+/g, "/");
+
                 const proxy = server.proxy || {};
+                server.port = server.port || Number(process.env.PORT || "3380");
                 server.proxy = {
                     ...proxy,
     
                     "/viewer/": {
-                        target: "https://apps.vertigisstudio.com/web/",
+                        target: viewerUrl.toString(),
                         changeOrigin: true,
                         rewrite: x => x.replace(/\/.*?\//, "/"),
                     },
         
                     "/scripts/": {
-                        target: "https://apps.vertigisstudio.com/web/",
+                        target: viewerUrl.toString(),
                         changeOrigin: true,
                     },
         
                     "/static/": {
-                        target: "https://apps.vertigisstudio.com/web/",
+                        target: viewerUrl.toString(),
                         changeOrigin: true,
                     }
                 };
