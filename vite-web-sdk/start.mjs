@@ -68,7 +68,9 @@ async function hoistViewer() {
 
             require([name], hoist, reject);
         });        
-    };    
+    };
+
+    window.__import.cache = cache;
 }
 
 async function start() {

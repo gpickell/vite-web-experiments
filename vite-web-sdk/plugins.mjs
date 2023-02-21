@@ -3,13 +3,14 @@ import { fileURLToPath } from "url";
 
 const externals = [
     "@arcgis/core/",
-    "esri/",
     "@vertigis/",
+    "esri/",
     "react",
     "react-dom",
     "web",
 ];
 
+const importPrefix = "/@import/";
 const sdkPrefix = "/@sdk/";
 
 function isExternal(id) {
@@ -34,7 +35,7 @@ function plugins() {
             apply: "serve",
    
             resolveId(id) {
-                if (isExternal(id)) {
+                if (id.startsWith(importPrefix)) {
                     return id;
                 }
 
@@ -44,6 +45,11 @@ function plugins() {
             },
 
             async load(id) {
+                if (id.startsWith(importPrefix)) {
+                    const suffix = id.substring(importPrefix.length);
+                    return `await __import(${JSON.stringify(suffix)});`;
+                }
+
                 if (id.startsWith(sdkPrefix)) {
                     const suffix = id.substring(sdkPrefix.length);
                     const path = fileURLToPath(new URL(suffix + ".mjs", import.meta.url));
@@ -93,6 +99,23 @@ function plugins() {
             apply: "serve",
 
             transform(code, id) {
+                /*
+                    The objective here is to keep the source code mostly the same, but we
+                    need to rewrite little fragments here and there to deal with the ESM
+                    imports of unreachable to ESM things.
+
+                    import ... from x
+                        becomes import x0; const ... = __import.cache[x];
+                        where x0 = importPrefix + x
+                        for only literal x and isExternal(x)
+
+                    import(x) 
+                        becomes __import(x)
+                        for only literal x and isExternal(x)
+
+                    These plugins now how to deal with imports of the form /@import/
+                */
+
                 function recurse(node) {
                     if (Array.isArray(node)) {
                         for (const part of node) {
@@ -109,9 +132,12 @@ function plugins() {
                             const { value } = source;
                             if (isExternal(value)) {
                                 take(node);
+                                push("import ");
+                                push(JSON.stringify(importPrefix + value));
+                                push(";");
     
                                 if (specifiers.length) {
-                                    push("const ");
+                                    push(" const ");
     
                                     let first = true;
                                     for (const { type, local, imported } of specifiers) {
@@ -138,13 +164,11 @@ function plugins() {
                                         push(" }");
                                     }
     
-                                    push(" = ");
+                                    push(" = __import.cache[");
+                                    push(JSON.stringify(value));
+                                    push("];");
                                 }
-                                
-                                push("await __import(");
-                                push(JSON.stringify(value));
-                                push(");");
-    
+   
                                 return;
                             }
                         }
@@ -152,7 +176,7 @@ function plugins() {
                         if (type === "ImportExpression") {
                             const { type, value } = node.source;
                             if (type === "Literal" && isExternal(value)) {
-                                take(node);   
+                                take(node);
                                 push("__import(");
                                 push(JSON.stringify(value));
                                 push(")");
